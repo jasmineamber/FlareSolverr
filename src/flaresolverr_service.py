@@ -292,6 +292,9 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
     res = ChallengeResolutionT({})
     res.status = STATUS_OK
     res.message = ""
+     
+    for cookie in req.cookies:
+        driver.add_cookie(cookie)
 
     # navigate to the page
     logging.debug(f'Navigating to... {req.url}')
@@ -380,9 +383,6 @@ def _evil_logic(req: V1RequestBase, driver: WebDriver, method: str) -> Challenge
     challenge_res.status = 200  # todo: fix, selenium not provides this info
     challenge_res.cookies = driver.get_cookies()
     challenge_res.userAgent = utils.get_user_agent(driver)
-     
-    for cookie in req.cookies:
-        driver.add_cookie(cookie)
 
     if not req.returnOnlyCookies:
         challenge_res.headers = {}  # todo: fix, selenium not provides this info
